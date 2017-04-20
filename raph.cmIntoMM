@@ -1,0 +1,30 @@
+import codecs
+import csv
+import re
+
+# check for all numbers with or without decimal separator (e.g. 6, 2.8, 10.0)
+PATTERN = re.compile('(\d+\.?\d?)')
+
+
+def enlarge():
+    with codecs.open('/Users/k/Downloads/csv.csv', 'r', encoding='utf-8',
+                     errors='ignore') as f:
+        lines = csv.reader(f)
+        header = next(lines)
+        with open(str('/Users/k/Downloads/csv_fixed.csv'), 'wt') as new_file:
+            writer = csv.writer(new_file, delimiter=",")
+            writer.writerow(header)
+            for line in lines:
+                measures = PATTERN.findall(line[2])
+                if len(measures) > 0:
+                    for measure in measures:
+                        numerical_measure = 10 * float(measure)
+                        if numerical_measure.is_integer():
+                            numerical_measure = int(numerical_measure)
+                        line[2] = line[2].replace(measure, str(numerical_measure))
+                    line[2] = line[2].replace('cm', 'mm')
+                writer.writerow(line)
+
+
+if __name__ == '__main__':
+    enlarge()
