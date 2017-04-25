@@ -1,0 +1,14 @@
+## pands play around
+## select the columns with an (g) at the end 
+
+
+columns = food_info.columns
+columns_list = columns.tolist()
+gram_columns = []
+for c in columns_list:
+    if c.endswith("(g)"):
+        gram_columns.append(c)
+
+gram_df = food_info[gram_columns]
+
+print(gram_df.head(3))
