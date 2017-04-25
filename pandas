@@ -1,4 +1,13 @@
 ## pands play around
+
+## import pandas and the file and convert the columns to a list
+import pandas
+food_info = pandas.read_csv("food_info.csv")
+col_names = food_info.columns.tolist()
+print(col_names)
+print(food_info.loc[2])
+
+
 ## select the columns with an (g) at the end 
 
 
