@@ -1,0 +1,47 @@
+import codecs
+import csv
+
+from fuzzywuzzy import process
+
+
+def read_keywords(filename):
+    with codecs.open(filename, 'r', encoding='utf-8') as f:
+        return csv.reader(f)
+
+
+def main():
+    with codecs.open('/Users/stade/Downloads/KeywordReportKampagne.csv', 'r',
+                     encoding='utf-8', errors='ignore') as g:
+        campaigns = csv.reader(g)
+        keyword_campaign_mapping = {x[1].strip().lower(): x[2] for x in campaigns}
+
+    cache = {'': (None, 0)}
+    print(len(keyword_campaign_mapping))
+    with codecs.open('/Users/stade/Downloads/KeyWordEcondaNeu.csv', 'r', encoding='utf-8',
+                     errors='ignore') as f:
+        econda_keywords = csv.reader(f, delimiter='\t')
+        header = next(econda_keywords)
+        header.append('CAMPAIGN')
+        with open(str('/Users/stade/Downloads/KeywordEcondaFixed.csv'), 'wt') as new_file:
+            writer = csv.writer(new_file, delimiter="\t")
+            writer.writerow(header)
+            for line in econda_keywords:
+                if line[0] == 'DEU':
+                    if line[5].endswith('/'):
+                        line[5] = line[5][:-1]
+                    erst_keyword = line[5].split('/')[-1].strip().lower()
+                    if erst_keyword in cache:
+                        best_match = cache[erst_keyword]
+                    else:
+                        best_match = process.extractOne(erst_keyword,
+                                                        keyword_campaign_mapping.keys())
+                        cache[erst_keyword] = best_match
+                    campaign = keyword_campaign_mapping.get(best_match[0])
+                    if campaign == None:
+                        campaign = ''
+                    line.append(campaign)
+                    writer.writerow(line)
+
+
+if __name__ == '__main__':
+    main()
