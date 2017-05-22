@@ -1,0 +1,16 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+%matplotlib inline
+
+
+
+cols = ["Sample_size", "Median", "Employed", "Full_time", "ShareWomen", "Unemployment_rate", "Men", "Women"]
+
+fig = plt.figure(figsize=(5,12))
+for r in range(1,5):
+    ax = fig.add_subplot(4,1,r)
+    ax = recent_grads[cols[r]].plot(kind='hist',rot=40)
+    ax = plt.title(cols[r])
+    
+    ## for some nice histograms
